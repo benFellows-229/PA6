@@ -1,4 +1,4 @@
-//a union find data structure
+// a union find data structure
 
 #include "UF.h"
 
@@ -17,16 +17,22 @@ UF::UF(int size)
 UF::~UF()
 {
     delete[] id;
-    delete[] sz; 
+    delete[] sz;
 }
 
 int UF::find(int x)
 {
     int i = x;
     while (i != id[i])
-    {
         i = id[i];
+
+    while (x != i)
+    {
+        int j = id[x];
+        id[x] = i;
+        x = j;
     }
+
     return i;
 }
 
@@ -48,3 +54,8 @@ void UF::Union(int x, int y)
     }
 }
 
+// connected method to check if two vertices are connected
+bool UF::connected(int x, int y)
+{
+    return find(x) == find(y);
+}

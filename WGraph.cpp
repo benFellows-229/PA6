@@ -93,57 +93,101 @@ void WGraph::calcFW()
   }
 }
 
-//find mst using kruskal's algorithm and union find
-//Sort all the edges of a graph according to their edge-weight values.
-//output the total weight of the mst
-//output the adjacency matrix of the mst
-
-
-//a method to computeMST using Kruskal's algorithm and union find data structure
-// void WGraph::computeMST()
-// {
-//   //create a set of edges
-//   UF uf(m_size);
-//   //create array of edges to sort
-//   Edge *edges = new Edge[m_size];
-//   for (int i = 0; i < m_size; ++i)
-//   {
-//     for (int j = 0; j < m_size; ++j)
-//     {
-//       if (m_adj[i][j] != std::numeric_limits<double>::max())
-//       {
-//         Edge e;
-//         e.source = i;
-//         e.dest = j;
-//         e.weight = m_adj[i][j];
-//         edges[i] = e;
-//       }
-//     }
-//   //output the total weight of the mst
-//   //output the adjacency matrix of the mst
-//   }
-// }
-
-
-  WGraph WGraph::processFile(string iFile)
+// find mst using kruskal's algorithm and union find
+// first sort all the edges of a graph according to their edge-weight values.
+// then, pick the smallest edge and check if it forms a cycle with the spanning tree formed so far.
+// if cycle is not formed, include this edge. Else, discard it.
+// store mst as adjacency matrix
+void WGraph::computeMST()
+{
+  // initialize mst
+  int totalWeight = 0;
+  double **mst;
+  mst = new double *[m_size];
+  for (int i = 0; i < m_size; ++i)
   {
-    string data;
-    ifstream infile(iFile);
-    istringstream ss(data);
-    int i = 0;
-    int j = 0;
-    double k = 0;
-    if (infile.is_open())
+    mst[i] = new double[m_size];
+  }
+  for (int i = 0; i < m_size; ++i)
+  {
+    for (int j = 0; j < m_size; ++j)
     {
-      WGraph tempGraph(i);
-      i++;
-      while (infile >> k)
-      {
-        cout << "j: " << j << " i: " << i << " k: " << k << endl;
-        j++;
-        tempGraph.addEdge(i, j, k);
-        }
+      mst[i][j] = 0;
     }
+  }
+
+  // create priority queue of edges
+  PQueue<Edge> pq(true);
+  for (int i = 0; i < m_size; ++i)
+  {
+    for (int j = i + 1; j < m_size; ++j)
+    {
+      if (m_adj[i][j] < std::numeric_limits<double>::max())
+      {
+        if (m_adj[i][j] != 0)
+        {
+          pq.addEdge(Edge(i, j, m_adj[i][j]));
+        }
+      }
+    }
+  }
+  // create union find
+  UF uf(m_size);
+  // while there are edges in the queue
+  while (!pq.isEmpty())
+  {
+    // get the edge with the smallest weight
+    Edge e = pq.pop();
+    cout << e.weight << " weight" << endl;
+    // if the edge does not form a cycle
+    if (!uf.connected(e.source, e.dest))
+    {
+      // add the edge to the mst
+      mst[e.source][e.dest] = e.weight;
+      mst[e.dest][e.source] = e.weight;
+      uf.Union(e.source, e.dest);
+      totalWeight += e.weight;
+    }
+  }
+  // print the mst
+  cout << "MST: " << endl;
+  for (int i = 0; i < m_size; ++i)
+  {
+    for (int j = 0; j < m_size; ++j)
+    {
+      cout << mst[i][j] << " ";
+    }
+    cout << endl;
+  }
+  cout << endl
+       << "Total weight: " << totalWeight << endl;
+}
+
+// a method to create a graph from a file and return the graph
+WGraph WGraph::processFile(string iFile)
+{
+  // open the file
+  ifstream in;
+  in.open(iFile);
+  // read the number of vertices
+  int numVertices;
+  in >> numVertices;
+  // create a graph with numVertices
+  WGraph g(numVertices);
+  // read the adjacency matrix
+  for (int i = 0; i < numVertices; ++i)
+  {
+    for (int j = 0; j < numVertices; ++j)
+    {
+      double weight = 0;
+      in >> weight;
+      g.addEdge(i, j, weight);
+    }
+  }
+  // close the file
+  in.close();
+  // return the graph
+  return g;
 }
 
 double WGraph::cheapestCost(VertexID i, VertexID j)
@@ -151,7 +195,7 @@ double WGraph::cheapestCost(VertexID i, VertexID j)
   return m_conn[i][j];
 }
 
-//method to print adjecency matrix
+// method to print adjecency matrix
 void WGraph::printAdj()
 {
   for (int i = 0; i < m_size; ++i)

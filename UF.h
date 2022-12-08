@@ -10,6 +10,7 @@ public:
     ~UF();
     int find(int x);
     void Union(int x, int y);
+    bool connected(int x, int y);
 
 private:
     int *id;
