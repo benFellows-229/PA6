@@ -31,6 +31,11 @@ WGraph::WGraph(unsigned int sz)
 WGraph::~WGraph()
 {
   // release memory
+  for (int i = 0; i < m_size; ++i)
+  {
+    delete[] m_adj[i];
+    delete[] m_conn[i];
+  }
 }
 
 void WGraph::addEdge(VertexID i, VertexID j, double w)
@@ -88,45 +93,36 @@ void WGraph::calcFW()
   }
 }
 
-//method to sort the edges in ascending order
-bool compareEdges(Edge e1, Edge e2)
-{
-  return e1.weight < e2.weight;
-}
-
 //find mst using kruskal's algorithm and union find
 //Sort all the edges of a graph according to their edge-weight values.
 //output the total weight of the mst
 //output the adjacency matrix of the mst
-void WGraph::computeMST()
-{
-  // sort edges
-  sort(m_edges.begin(), m_edges.end(), compareEdges);
-  // create a set of vertices
-  set<VertexID> vertices;
-  for (int i = 0; i < m_size; ++i)
-  {
-   vertices.insert(i);
-  }
-  // create a set of edges
-  set<Edge> mst;
-  for (int i = 0; i < m_edges.size(); ++i)
-  {
-   if (vertices.find(m_edges[i].source) != vertices.end() &&
-       vertices.find(m_edges[i].dest) != vertices.end())
-   {
-     mst.insert(m_edges[i]);
-     vertices.erase(m_edges[i].source);
-     vertices.erase(m_edges[i].dest);
-   }
-  }
-  // print mst
-  for (set<Edge>::iterator it = mst.begin(); it != mst.end(); ++it)
-  {
-   cout << it->source << " " << it->dest << " " << it->weight << endl;
-  }
-}
 
+
+//a method to computeMST using Kruskal's algorithm and union find data structure
+// void WGraph::computeMST()
+// {
+//   //create a set of edges
+//   UF uf(m_size);
+//   //create array of edges to sort
+//   Edge *edges = new Edge[m_size];
+//   for (int i = 0; i < m_size; ++i)
+//   {
+//     for (int j = 0; j < m_size; ++j)
+//     {
+//       if (m_adj[i][j] != std::numeric_limits<double>::max())
+//       {
+//         Edge e;
+//         e.source = i;
+//         e.dest = j;
+//         e.weight = m_adj[i][j];
+//         edges[i] = e;
+//       }
+//     }
+//   //output the total weight of the mst
+//   //output the adjacency matrix of the mst
+//   }
+// }
 
 
   WGraph WGraph::processFile(string iFile)
@@ -143,7 +139,7 @@ void WGraph::computeMST()
       i++;
       while (infile >> k)
       {
-        cout << k << endl;
+        cout << "j: " << j << " i: " << i << " k: " << k << endl;
         j++;
         tempGraph.addEdge(i, j, k);
         }
@@ -153,4 +149,17 @@ void WGraph::computeMST()
 double WGraph::cheapestCost(VertexID i, VertexID j)
 {
   return m_conn[i][j];
+}
+
+//method to print adjecency matrix
+void WGraph::printAdj()
+{
+  for (int i = 0; i < m_size; ++i)
+  {
+    for (int j = 0; j < m_size; ++j)
+    {
+      cout << m_adj[i][j] << " ";
+    }
+    cout << endl;
+  }
 }

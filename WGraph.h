@@ -9,6 +9,7 @@
 #include <limits>
 #include <sstream>
 #include <fstream>
+#include "UF.h"
 using namespace std;
 //an unweighted, undirected WGraph implemented with adjacency matrix
 //fixed size
@@ -35,6 +36,7 @@ public:
   void calcFW();
   static WGraph processFile(string iFile);
   void computeMST();
+  void printAdj();
 
 private:
   double** m_adj;
