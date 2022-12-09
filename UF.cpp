@@ -5,31 +5,31 @@
 UF::UF(int size)
 {
     this->size = size;
-    id = new int[size];
+    parent = new int[size];
     sz = new int[size];
     for (int i = 0; i < size; ++i)
     {
-        id[i] = i;
+        parent[i] = i;
         sz[i] = 1;
     }
 }
 
 UF::~UF()
 {
-    delete[] id;
+    delete[] parent;
     delete[] sz;
 }
 
 int UF::find(int x)
 {
     int i = x;
-    while (i != id[i])
-        i = id[i];
+    while (i != parent[i])
+        i = parent[i];
 
     while (x != i)
     {
-        int j = id[x];
-        id[x] = i;
+        int j = parent[x];
+        parent[x] = i;
         x = j;
     }
 
@@ -44,17 +44,17 @@ void UF::Union(int x, int y)
         return;
     if (sz[i] < sz[j])
     {
-        id[i] = j;
+        parent[i] = j;
         sz[j] += sz[i];
     }
     else
     {
-        id[j] = i;
+        parent[j] = i;
         sz[i] += sz[j];
     }
 }
 
-// connected method to check if two vertices are connected
+// connected method to check if two vertices are in the same set
 bool UF::connected(int x, int y)
 {
     return find(x) == find(y);

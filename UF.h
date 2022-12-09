@@ -13,7 +13,7 @@ public:
     bool connected(int x, int y);
 
 private:
-    int *id;
+    int *parent;
     int *sz;
     int size;
 };

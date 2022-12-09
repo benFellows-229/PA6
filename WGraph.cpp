@@ -117,7 +117,7 @@ void WGraph::computeMST()
   }
 
   // create priority queue of edges
-  PQueue<Edge> pq(true);
+  PQueue<Edge> edgeQ(true);
   for (int i = 0; i < m_size; ++i)
   {
     for (int j = i + 1; j < m_size; ++j)
@@ -126,7 +126,7 @@ void WGraph::computeMST()
       {
         if (m_adj[i][j] != 0)
         {
-          pq.addEdge(Edge(i, j, m_adj[i][j]));
+          edgeQ.addEdge(Edge(i, j, m_adj[i][j]));
         }
       }
     }
@@ -134,15 +134,14 @@ void WGraph::computeMST()
   // create union find
   UF uf(m_size);
   // while there are edges in the queue
-  while (!pq.isEmpty())
+  while (!edgeQ.isEmpty())
   {
     // get the edge with the smallest weight
-    Edge e = pq.pop();
-    cout << e.weight << " weight" << endl;
+    Edge e = edgeQ.pop();
     // if the edge does not form a cycle
     if (!uf.connected(e.source, e.dest))
     {
-      // add the edge to the mst
+      // addEdge the edge to the mst
       mst[e.source][e.dest] = e.weight;
       mst[e.dest][e.source] = e.weight;
       uf.Union(e.source, e.dest);
@@ -160,7 +159,7 @@ void WGraph::computeMST()
     cout << endl;
   }
   cout << endl
-       << "Total weight: " << totalWeight << endl;
+       << "Total weight: " << totalWeight << endl << endl;
 }
 
 // a method to create a graph from a file and return the graph
