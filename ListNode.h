@@ -1,3 +1,13 @@
+/*
+Ben Fellows
+002369768
+bfellows@chapman.edu
+CPSC-350-02
+CPSC350 PA6
+Listnode.h
+A templated class containing the listnode implementation from class. I have overloaded the < and > operators to compare the weights of the edges.
+*/
+
 #ifndef LIST_NODE_H
 #define LIST_NODE_H
 
@@ -15,6 +25,12 @@ public:
   friend class DblList;
   template <typename S>
   friend class PQueue;
+  friend bool operator < (const ListNode<T>& lhs, const ListNode<T>& rhs){
+    return lhs.m_data < rhs.m_data;
+  }
+  friend bool operator > (const ListNode<T>& lhs, const ListNode<T>& rhs){
+    return lhs.m_data > rhs.m_data;
+  }
 private:
   T m_data;
   ListNode<T>* m_next;

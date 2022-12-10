@@ -1,3 +1,14 @@
+/*
+Ben Fellows
+002369768
+bfellows@chapman.edu
+CPSC-350-02
+CPSC350 PA6
+WGraph.cpp
+A cpp file containing the implementation of the WGraph class from class, I have added an edge struct to hold the weight, the two vertices that the edge connects and overload the < and > operators to compare edge weights.
+I have also added a method to print the adjacency matrix, a CopmuteMST method to compute the MST using Kruskals algorithm. And a processFile method to read in a file and create a graph from it.
+*/
+
 #include "WGraph.h"
 
 WGraph::WGraph()
@@ -93,11 +104,7 @@ void WGraph::calcFW()
   }
 }
 
-// find mst using kruskal's algorithm and union find
-// first sort all the edges of a graph according to their edge-weight values.
-// then, pick the smallest edge and check if it forms a cycle with the spanning tree formed so far.
-// if cycle is not formed, include this edge. Else, discard it.
-// store mst as adjacency matrix
+// Method to find mst using kruskals algorithm
 void WGraph::computeMST()
 {
   // initialize mst
@@ -116,32 +123,29 @@ void WGraph::computeMST()
     }
   }
 
-  // create priority queue of edges
+  // create a min priority queue of edges to sort them
   PQueue<Edge> edgeQ(true);
   for (int i = 0; i < m_size; ++i)
   {
     for (int j = i + 1; j < m_size; ++j)
     {
-      if (m_adj[i][j] < std::numeric_limits<double>::max())
+      if (m_adj[i][j] < std::numeric_limits<double>::max() && m_adj[i][j] != 0)
       {
-        if (m_adj[i][j] != 0)
-        {
-          edgeQ.addEdge(Edge(i, j, m_adj[i][j]));
-        }
+          edgeQ.add(Edge(i, j, m_adj[i][j]));
       }
     }
   }
-  // create union find
+  // create union find object
   UF uf(m_size);
   // while there are edges in the queue
   while (!edgeQ.isEmpty())
   {
     // get the edge with the smallest weight
     Edge e = edgeQ.pop();
-    // if the edge does not form a cycle
+    // check if the edge forms a cycle
     if (!uf.connected(e.source, e.dest))
     {
-      // addEdge the edge to the mst
+      // add the edge to the mst
       mst[e.source][e.dest] = e.weight;
       mst[e.dest][e.source] = e.weight;
       uf.Union(e.source, e.dest);

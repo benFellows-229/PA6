@@ -1,5 +1,3 @@
-// a union find data structure
-
 #ifndef UF_H
 #define UF_H
 

@@ -1,3 +1,12 @@
+/*
+Ben Fellows
+002369768
+bfellows@chapman.edu
+CPSC-350-02
+CPSC350 PA6
+DblList.cpp
+A templated class containing the dbllist implelmentation from class
+*/
 #ifndef DBL_LIST_H
 #define DBL_LIST_H
 

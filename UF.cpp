@@ -1,7 +1,16 @@
-// a union find data structure
+/*
+Ben Fellows
+002369768
+bfellows@chapman.edu
+CPSC-350-02
+CPSC350 PA6
+UF.cpp
+A cpp file containing a Union Find disjoint set class.
+*/
 
 #include "UF.h"
 
+//Constructor initializes all values to their own index as each vertex is its own set, and each size is initialized to 1
 UF::UF(int size)
 {
     this->size = size;
@@ -19,7 +28,7 @@ UF::~UF()
     delete[] parent;
     delete[] sz;
 }
-
+// find method to find the root of a vertex
 int UF::find(int x)
 {
     int i = x;
@@ -35,7 +44,7 @@ int UF::find(int x)
 
     return i;
 }
-
+// Union method to join two sets, checks the size of each set and sets the smaller sets root = to the larger sets root
 void UF::Union(int x, int y)
 {
     int i = find(x);
@@ -54,7 +63,7 @@ void UF::Union(int x, int y)
     }
 }
 
-// connected method to check if two vertices are in the same set
+// connected method to check if two vertices are in the same set, checks by calling find on each vertex and checking if their roots are equal.
 bool UF::connected(int x, int y)
 {
     return find(x) == find(y);

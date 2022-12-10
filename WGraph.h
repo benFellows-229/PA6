@@ -11,12 +11,10 @@
 #include "UF.h"
 #include "PQueue.h"
 using namespace std;
-// an unweighted, undirected WGraph implemented with adjacency matrix
-// fixed size
 
 typedef unsigned int VertexID;
 
-// structure to keep track of the source and destination nodes, as well as their weight.
+// Edge structure to keep track of the source and destination nodes, as well as their weight.
 struct Edge
 {
   VertexID source;
@@ -29,11 +27,21 @@ struct Edge
     dest = 0;
     weight = 0;
   }
+  //overloaded constructor
   Edge(VertexID s, VertexID d, double w)
   {
     source = s;
     dest = d;
     weight = w;
+  }
+  //overloaded operators to compare weights of edges
+  friend bool operator<(const Edge &e1, const Edge &e2)
+  {
+    return e1.weight < e2.weight;
+  }
+  friend bool operator>(const Edge &e1, const Edge &e2)
+  {
+    return e1.weight > e2.weight;
   }
 };
 

@@ -1,3 +1,13 @@
+/*
+Ben Fellows
+002369768
+bfellows@chapman.edu
+CPSC-350-02
+CPSC350 PA6
+PQueue.h
+A templated class containing the priority queue implementation from class. I have overloaded the < and > operators to compare the weights of the edges.
+*/
+
 #ifndef PQ_H
 #define PQ_H
 
@@ -85,25 +95,6 @@ T PQueue<T>::pop(){
   } else{
     return DblList<T>::removeBack();
   }
-}
-
-//method to add edge based on weight
-template <typename T>
-void PQueue<T>::addEdge(T data){
-  if(isEmpty()){ //just add it
-    DblList<T>::addFront(data);
-    return;
-  }
-  //find the right place and then add it
-  ListNode<T>* newNode = new ListNode<T>(data);
-  int currIdx = 0;
-  ListNode<T>* currNode = DblList<T>::m_front;
-  while(currNode!=NULL && currNode->m_data.weight < data.weight){
-    currNode = currNode->m_next;
-    ++currIdx;
-  }
-
-  DblList<T>::add(currIdx,data); //lazy hack - do better
 }
 
 #endif
